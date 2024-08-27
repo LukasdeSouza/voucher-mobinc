@@ -1,11 +1,18 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const connectDB = require('./src/db')
+const voucherRoutes = require('./src/routes/voucherRoutes');
+require('dotenv').config();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const app = express();
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// Conectar ao banco de dados
+connectDB();
+
+// Middleware para analisar JSON
+app.use(express.json());
+
+// Rotas
+app.use('/api/vouchers', voucherRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
