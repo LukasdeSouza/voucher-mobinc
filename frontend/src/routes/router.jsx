@@ -1,5 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../components/layout/root";
+import VoucherPage from "../pages/voucher";
+import ResgateVoucherPage from "../pages/voucher/resgate";
+import SuccessPage from "../pages/success";
 
 export const router = createBrowserRouter([
   {
@@ -7,14 +10,12 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        path: "/voucher",
-        element: <div>Voucher</div>,
-        children: [
-          {
-            path: "/voucher/resgate",
-            element: <div>Resgate VOUCHER</div>,
-          },
-        ],
+        path: "/",
+        element: <VoucherPage />,
+      },
+      {
+        path: "/resgate",
+        element: <ResgateVoucherPage />,
       },
       {
         path: "/login",
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "/gerenciar",
         element: <div>Gerenciar</div>,
+      },
+      {
+        path: "/sucesso",
+        element: <SuccessPage/>,
       },
     ],
   },
