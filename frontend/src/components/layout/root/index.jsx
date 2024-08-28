@@ -7,9 +7,7 @@ const RootLayout = () => {
     <div className="w-screen h-full">
       <HeaderNavigation />
       <Outlet />
-      <div>
       <Toaster />
-      </div>
     </div>
   );
 };
