@@ -3,6 +3,8 @@ import RootLayout from "../components/layout/root";
 import VoucherPage from "../pages/voucher";
 import ResgateVoucherPage from "../pages/voucher/resgate";
 import SuccessPage from "../pages/success";
+import LoginPage from "../pages/login";
+import GerenciarPage from "../pages/gerenciar";
 
 export const router = createBrowserRouter([
   {
@@ -19,11 +21,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <div>Login</div>,
+        element: <LoginPage/>,
       },
       {
         path: "/gerenciar",
-        element: <div>Gerenciar</div>,
+        element: <GerenciarPage/>,
       },
       {
         path: "/sucesso",

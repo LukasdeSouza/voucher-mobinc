@@ -7,7 +7,7 @@ const Input = ( props ) => {
         {props.label}
       </label>
       <input
-        className="p-2 border border-[#222222] hover:scale-95 delay-75 transition-all"
+        className="p-2 border border-[#222222] hover:bg-slate-100 hover:scale-95 delay-75 transition-all"
         {...props}
       />
     </div>
