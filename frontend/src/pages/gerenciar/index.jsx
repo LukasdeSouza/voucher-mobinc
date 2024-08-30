@@ -8,6 +8,7 @@ import { RxUpdate } from "react-icons/rx";
 import { getToken } from "../../utils/localStorage";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/format";
+import MobIncLogo from "../../assets/mob_inc_logo";
 
 const GerenciarPage = () => {
   const navigate = useNavigate();
@@ -37,11 +38,11 @@ const GerenciarPage = () => {
   const onChangeInputValue = (e) => {
     let inputValue = formatCurrency(e.target.value);
     setInputValue(inputValue);
+    setValue("value", inputValue);
   }
 
   const onSubmit = async (data) => {
     setLoading(true);
-    setValue("value", inputValue);
     try {
       const response = await fetch(
         "http://localhost:5000/api/vouchers/create",
@@ -60,13 +61,18 @@ const GerenciarPage = () => {
       const result = await response.json();
       if (result.voucherNumber) {
         toast(result.message, {
-          icon: "👏",
+          icon: <MobIncLogo/>,
           style: {
+            display: "flex",
+            flexDirection: "column",
+            padding: "16px",
+            gap: "8px",
+            alignItems: "baseline",
             borderRadius: "10px",
             background: "#333",
             color: "#fff",
           },
-          duration: 10000
+          duration: 100000
         });
       }
     } catch (error) {
