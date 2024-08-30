@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const connectDB = require('./src/db')
 const voucherRoutes = require('./src/routes/voucherRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 
 // Conectar ao banco de dados
 connectDB();
