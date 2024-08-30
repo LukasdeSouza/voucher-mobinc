@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../components/card";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { setToken } from "../../utils/localStorage";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState();
   const {
     register,
     handleSubmit,
@@ -11,16 +15,36 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    toast("Enviado com sucesso!", {
-      icon: "👏",
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+        }),
+      });
+      const result = await response.json();
+      if (result.token) {
+        setToken(result.token);
+        toast("Login efetuado com sucesso!", {
+          icon: "👏",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        navigate("/gerenciar");
+      }
+    } catch (error) {
+      toast.error("Erro:", error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -57,9 +81,9 @@ const LoginPage = () => {
               </label>
               <input
                 className="bg-white text-gray-600 p-2 border border-[#222222] hover:bg-slate-100 hover:scale-95 delay-75 transition-all"
-                {...register("senha", { required: true })}
+                {...register("password", { required: true })}
               />
-              {errors.senha && (
+              {errors.password && (
                 <span className="text-xs text-red-700">
                   preencha sua senha.
                 </span>
@@ -67,7 +91,7 @@ const LoginPage = () => {
             </div>
             <input
               type={"submit"}
-              name="Resgatar"
+              value={loading ? "Carregando..." : "Entrar"}
               className="bg-black hover:bg-slate-200 transition-all ease-in-out delay-100 
                     hover:scale-95 border-none text-white hover:text-black font-bold 
                     min-w-36 p-2 cursor-pointer"
