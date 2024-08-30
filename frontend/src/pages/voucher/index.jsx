@@ -17,23 +17,26 @@ const VoucherPage = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    toast('Enviado com sucesso!',
-        {
-          icon: '👏',
-          style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
-          },
-        }
-      );
+    toast("Enviado com sucesso!", {
+      icon: "👏",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
   };
 
   return (
     <div className="flex w-full h-3/4 justify-center items-center">
       <Card>
         <div className="flex flex-col gap-8">
-          <p className="text-white font-semibold">Resgate seu voucher.</p>
+          <div>
+            <p className="text-white font-semibold">Resgate seu voucher.</p>
+            <small className="text-xs font-thin">
+             informe o número do voucher seguido da senha
+            </small>
+          </div>
           <form
             className="flex flex-col gap-4"
             onSubmit={handleSubmit(onSubmit)}
@@ -43,7 +46,7 @@ const VoucherPage = () => {
                 número do voucher
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-slate-100 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
                 {...register("numerovoucher", { required: true })}
               />
               {errors.numerovoucher && (
@@ -57,7 +60,7 @@ const VoucherPage = () => {
                 senha
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-slate-100 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
                 {...register("senhavoucher", { required: true })}
               />
               {errors.senhavoucher && (
