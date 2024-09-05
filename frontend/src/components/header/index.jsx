@@ -6,7 +6,7 @@ import { getToken } from "../../utils/localStorage";
 const HeaderNavigation = () => {
   const navigate = useNavigate();
 
-  const token = getToken(true);
+  const token = getToken();
 
   return (
     <div className="w-full flex flex-row items-center justify-between p-8">

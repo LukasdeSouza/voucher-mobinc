@@ -40,6 +40,8 @@ const LoginPage = () => {
           },
         });
         navigate("/gerenciar");
+      } else {
+        toast.error(result.message);
       }
     } catch (error) {
       toast.error("Erro:", error);
