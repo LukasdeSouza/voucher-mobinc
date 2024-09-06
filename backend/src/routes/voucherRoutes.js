@@ -28,16 +28,12 @@ router.post("/create", async (req, res) => {
 
 // Rota para resgatar um voucher
 router.post("/redeem", async (req, res) => {
-  console.log('entrou')
   try {
     const { number, password, nome, banco, chavePix } = req.body;
-  console.log('req.body', req.body)
     
     const voucher = await Voucher.findOne({ number });
     if (!voucher)
-      
       return res.status(404).json({ message: "Voucher não encontrado" });
-      console.log('voucher', voucher)
     
     const isMatch = await voucher.matchPassword(password);
     if (!isMatch) return res.status(400).json({ message: "Senha inválida" });

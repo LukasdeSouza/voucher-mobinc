@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../components/card";
 import Input from "../../components/input";
 import ButtonContained from "../../components/buttons/contained";
@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 const VoucherPage = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -16,6 +17,7 @@ const VoucherPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setLoading(true)
     try {
       const response = await fetch(
         "http://localhost:5000/api/vouchers/redeem",
@@ -42,7 +44,7 @@ const VoucherPage = () => {
         navigate("/");
       }
     } catch (error) {
-      toast("Ocorreu um erro ao recuperar o voucher", {
+      toast("Ocorreu um erro ao recuperar o voucher, tente novamente!", {
         icon: "🔥",
         style: {
           borderRadius: "10px",
@@ -51,6 +53,7 @@ const VoucherPage = () => {
         },
       });
     }
+    setLoading(false)
   };
 
   return (
@@ -139,7 +142,7 @@ const VoucherPage = () => {
               )}
             </div>
             <ButtonContained
-              value={"continuar"}
+              value={loading ? "Carregando..." : "Resgatar voucher"}
               type="submit"
               onClick={handleSubmit(onSubmit)}
             />
