@@ -68,7 +68,7 @@ router.post("/redeem", async (req, res) => {
     voucher.isRedeemed = true;
     await voucher.save();
 
-    res.status(200).json({ message: "Voucher resgatado com sucesso" });
+    res.status(200).json({ message: "Suas informações foram salvas com Sucesso! Em breve o valor do Voucher cairá em sua conta informada" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

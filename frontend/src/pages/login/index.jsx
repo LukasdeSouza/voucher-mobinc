@@ -48,7 +48,7 @@ const LoginPage = () => {
         toast.error(result.message);
       }
     } catch (error) {
-      toast.error("Erro:", error);
+      toast.error("Erro no servidor (500):", error);
     }
     setLoading(false);
   };
@@ -64,7 +64,7 @@ const LoginPage = () => {
           >
             <div className="flex flex-col gap-1">
               <label className="font-thin text-xs" htmlFor="">
-                e-mail
+                e-mail de administrador
               </label>
               <input
                 className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
@@ -93,13 +93,13 @@ const LoginPage = () => {
               {seePassword ? (
                 <FaRegEyeSlash
                   size={20}
-                  className="hover:rotate-180 hover:text-gray-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
+                  className="hover:rotate-180 hover:text-gray-400 cursor-pointer absolute right-3 top-8 text-slate-400 transition-all ease-in-out delay-100"
                   onClick={() => setSeePassword((seePassword) => !seePassword)}
                 />
               ) : (
                 <FaRegEye
                   size={20}
-                  className="hover:text-gray-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
+                  className="hover:text-gray-400 cursor-pointer absolute right-3 top-8 text-slate-400 transition-all ease-in-out delay-100"
                   onClick={() => setSeePassword((seePassword) => !seePassword)}
                 />
               )}

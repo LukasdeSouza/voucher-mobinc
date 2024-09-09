@@ -18,12 +18,14 @@ const HeaderNavigation = () => {
           className="relative flex flex-row items-center gap-1 px-3 py-2 
         rounded-lg hover:bg-gray-700 delay-75 transition-all scale-95
         cursor-pointer"
-          onClick={() => setShowMenu(true)}
+          onClick={() => setShowMenu((showMenu) => !showMenu)}
         >
           <FaRegUserCircle size={16} />
           <small className="text-xs">{token.email}</small>
           <div
-            className={`top-8 border w-[120px] bg-slate-950 border-gray-800 absolute p-2 ${
+            className={`top-8 border w-[120px] bg-slate-950 border-gray-800 absolute p-2 
+              transition-all ease-in-out delay-100 shadow-md
+               ${
               showMenu ? "flex flex-row" : "hidden"
             }`}
             onMouseLeave={() => setShowMenu(false)}

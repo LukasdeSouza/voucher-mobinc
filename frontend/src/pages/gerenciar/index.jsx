@@ -72,7 +72,7 @@ const GerenciarPage = () => {
             background: "#333",
             color: "#fff",
           },
-          duration: 100000
+          duration: 10000,
         });
       }
     } catch (error) {
@@ -101,7 +101,7 @@ const GerenciarPage = () => {
           >
             <div className="relative flex flex-col gap-1">
               <label className="font-thin text-xs text-gray-900" htmlFor="">
-                número do voucher
+                código do voucher
               </label>
               <RxUpdate
                 size={20}
@@ -115,7 +115,7 @@ const GerenciarPage = () => {
               />
               {errors.number && (
                 <span className="text-xs text-red-700">
-                  gere um número de voucher para salvar
+                  gere um código de voucher para salvar
                 </span>
               )}
             </div>
