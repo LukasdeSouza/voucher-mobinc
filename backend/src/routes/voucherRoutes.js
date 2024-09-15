@@ -102,11 +102,12 @@ router.post("/redeem", async (req, res) => {
   
     const client = await auth.getClient();
     const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
-    const range = "Sheet1!A1"
+    const readRange = 'Sheet1!A1:I';
 
-    const sheetData = await sheets.spreadsheets.values.get({
+    const readResponse = await sheets.spreadsheets.values.get({
+      auth: client,
       spreadsheetId,
-      range,
+      range: readRange,
     });
 
     const rows = readResponse.data.values;
@@ -120,17 +121,27 @@ router.post("/redeem", async (req, res) => {
       return res.status(404).json({ message: "Voucher não encontrado na planilha" });
     }
 
+    const currentRowData = rows[voucherRowIndex];
+
+    // Concatena os novos valores às colunas existentes
+    const updatedRowData = [
+      ...currentRowData,        // Dados atuais
+      banco,                    // Nova coluna
+      chavePix,                 // Nova coluna
+      tipoChavePix,             // Nova coluna
+      'RESGATADO'               // Status de resgate
+    ];
+
     // Define o intervalo da linha a ser atualizada (exemplo: linha 5 -> 'Sheet1!A5:D5')
-    const updateRange = `Sheet1!A${voucherRowIndex + 1}:G${voucherRowIndex + 1}`;
+    const updateRange = `Sheet1!A${voucherRowIndex + 1}:I${voucherRowIndex + 1}`;
     
     await sheets.spreadsheets.values.update({
+      auth: client,
       spreadsheetId,
       range: updateRange,
       valueInputOption: 'RAW',
       resource: {
-        values: [
-          [number, nome, banco, chavePix, tipoChavePix, 'RESGATADO'] // Adiciona os dados e marca como resgatado
-        ],
+        values: updatedRowData,
       },
     });
 
