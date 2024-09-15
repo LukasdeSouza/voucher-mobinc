@@ -3,7 +3,7 @@ import Card from "../../components/card";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { TbReportMoney } from "react-icons/tb";
+import { TbNumbers, TbReportMoney } from "react-icons/tb";
 import { RxUpdate } from "react-icons/rx";
 import { getToken } from "../../utils/localStorage";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,8 @@ const GerenciarPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState();
   const [inputValue, setInputValue] = useState("");
-  const [seePassword, setSeePassword] = useState(false);
+  // const [quantityValue, setQuantityValue] = useState("");
+  // const [seePassword, setSeePassword] = useState(false);
 
   const {
     register,
@@ -22,18 +23,22 @@ const GerenciarPage = () => {
     watch,
     setValue,
     formState: { errors },
-  } = useForm();
-
-  const generateVoucher = (length = 12) => {
-    const charset =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let voucher = "";
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
-      voucher += charset[randomIndex];
+  } = useForm({
+    defaultValues: {
+      quantity: 1,
     }
-    setValue("number", voucher);
-  };
+  });
+
+  // const generateVoucher = (length = 12) => {
+  //   const charset =
+  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  //   let voucher = "";
+  //   for (let i = 0; i < length; i++) {
+  //     const randomIndex = Math.floor(Math.random() * charset.length);
+  //     voucher += charset[randomIndex];
+  //   }
+  //   setValue("number", voucher);
+  // };
 
   const onChangeInputValue = (e) => {
     let inputValue = formatCurrency(e.target.value);
@@ -52,14 +57,13 @@ const GerenciarPage = () => {
           },
           method: "POST",
           body: JSON.stringify({
-            number: data.number,
-            password: data.password,
+            quantity: data.quantity,
             value: data.value
           }),
         }
       );
       const result = await response.json();
-      if (result.voucherNumber) {
+      if (result.vouchers) {
         toast(result.message, {
           icon: <MobIncLogo/>,
           style: {
@@ -85,9 +89,10 @@ const GerenciarPage = () => {
     const token = getToken();
     if (!token) {
       navigate("/login");
-    } else {
-      generateVoucher();
-    }
+    } 
+    // else {
+    //   generateVoucher();
+    // }
   }, []);
 
   return (
@@ -99,7 +104,7 @@ const GerenciarPage = () => {
             className="flex flex-col gap-4"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <div className="relative flex flex-col gap-1">
+            {/* <div className="relative flex flex-col gap-1">
               <label className="font-thin text-xs text-gray-900" htmlFor="">
                 código do voucher
               </label>
@@ -118,7 +123,7 @@ const GerenciarPage = () => {
                   gere um código de voucher para salvar
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="relative flex flex-col gap-1">
               <label className="font-thin text-xs text-gray-900" htmlFor="">
                 valor do voucher
@@ -141,6 +146,25 @@ const GerenciarPage = () => {
               )}
             </div>
             <div className="relative flex flex-col gap-1">
+              <label className="font-thin text-xs text-gray-900" htmlFor="">
+                quantidade de vouchers
+              </label>
+              <TbNumbers
+                size={20}
+                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
+              />
+              <input
+                className="bg-white text-gray-600 p-2 border border-[#222222]"
+                placeholder="ex: 2"
+                {...register("quantity", { required: true })}
+              />
+              {errors.quantity && (
+                <span className="text-xs text-red-700">
+                  digite uma quantidade de vouchers
+                </span>
+              )}
+            </div>
+            {/* <div className="relative flex flex-col gap-1">
               <label className="font-thin text-xs text-gray-900" htmlFor="">
                 senha do voucher
               </label>
@@ -167,11 +191,11 @@ const GerenciarPage = () => {
                   a senha deve conter no mínimo 8 caractéres.
                 </span>
               )}
-            </div>
+            </div> */}
             <input
               type={"submit"}
               disabled={loading}
-              value={loading ? "Carregando..." : "Cadastrar Voucher"}
+              value={loading ? "Carregando..." : "Cadastrar Vouchers"}
               className="bg-black hover:bg-slate-200 transition-all ease-in-out delay-100 
                     hover:scale-95 border-none text-white hover:text-black font-bold 
                     min-w-36 p-2 cursor-pointer"

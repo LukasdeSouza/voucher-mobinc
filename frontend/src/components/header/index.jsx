@@ -11,7 +11,7 @@ const HeaderNavigation = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="w-full flex flex-row items-center justify-between p-8">
+    <div className="w-full flex flex-row items-center justify-between p-5">
       <MobIncLogo style={{ cursor: "pointer" }} onClick={() => navigate("/")} />
       {token ? (
         <div

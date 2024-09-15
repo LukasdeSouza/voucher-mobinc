@@ -129,6 +129,21 @@ const VoucherPage = () => {
             </div>
             <div className="flex flex-col gap-1">
               <label className="font-thin text-xs" htmlFor="">
+                tipo de chave pix
+              </label>
+              <input
+                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                placeholder="ex: CPF, CNPJ, e-mail, telefone"
+                {...register("tipoChavePix", { required: true })}
+              />
+              {errors.tipoChavePix && (
+                <span className="text-xs text-red-700">
+                  o tipo de chave pix é obrigatório.
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="font-thin text-xs" htmlFor="">
                 chave Pix
               </label>
               <input
