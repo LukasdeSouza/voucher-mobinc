@@ -50,7 +50,7 @@ const GerenciarPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/vouchers/create",
+        `https://voucher-mobinc.onrender.com/api/vouchers/create`,
         {
           headers: {
             "Content-Type": "application/json",
