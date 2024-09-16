@@ -30,6 +30,7 @@ const VoucherPage = () => {
             nome: data.nome,
             banco: data.banco,
             chavePix: data.chavePix,
+            tipoChavePix: data.tipoChavePix
           }),
         }
       );
@@ -57,7 +58,7 @@ const VoucherPage = () => {
   };
 
   return (
-    <div className="flex w-full h-3/4 justify-center items-center">
+    <div className="flex w-full h-3/4 mt-2 justify-center items-center">
       <Card>
         <div className="flex flex-col gap-8">
           <div>
