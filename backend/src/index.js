@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/api/vouchers", voucherRoutes);
 app.use("/api/auth", authRoutes);
 
-app.user("/", (req, res) => {
+app.use("/", (req, res) => {
   return res.status(200).json({ message: "API is running" });
 });
 
