@@ -43,7 +43,7 @@ router.post("/create", async (req, res) => {
       });
 
       await voucher.save();
-      createdVouchers.push([voucherNumber, voucherPassword, value, "Não resgatado"]);
+      createdVouchers.push([voucherNumber, voucherPassword, value, "NÃO RESGATADO"]);
     }
 
     const response = await sheets.spreadsheets.values.append({
@@ -62,7 +62,7 @@ router.post("/create", async (req, res) => {
     res
       .status(201)
       .json({
-        message: `Foram gerador ${quantity} vouchers com sucesso! Confira sua planilha`,
+        message: `Foram gerados ${quantity} vouchers com sucesso! Confira sua planilha`,
         vouchers: createdVouchers
       });
   } catch (error) {
@@ -102,7 +102,7 @@ router.post("/redeem", async (req, res) => {
   
     const client = await auth.getClient();
     const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
-    const readRange = 'Sheet1!A1:I';
+    const readRange = 'Sheet1!A1:J';
 
     const readResponse = await sheets.spreadsheets.values.get({
       auth: client,
@@ -122,18 +122,19 @@ router.post("/redeem", async (req, res) => {
     }
 
     const currentRowData = rows[voucherRowIndex];
+    console.log(currentRowData)
 
     // Concatena os novos valores às colunas existentes
     const updatedRowData = [
-      ...currentRowData,        // Dados atuais
+      'RESGATADO',              // Status de resgate
+      nome,                     // Nova coluna
       banco,                    // Nova coluna
       chavePix,                 // Nova coluna
       tipoChavePix,             // Nova coluna
-      'RESGATADO'               // Status de resgate
     ];
 
     // Define o intervalo da linha a ser atualizada (exemplo: linha 5 -> 'Sheet1!A5:D5')
-    const updateRange = `Sheet1!A${voucherRowIndex + 1}:I${voucherRowIndex + 1}`;
+    const updateRange = `Sheet1!D${voucherRowIndex + 1}:J${voucherRowIndex + 1}`;
     
     await sheets.spreadsheets.values.update({
       auth: client,
@@ -141,7 +142,7 @@ router.post("/redeem", async (req, res) => {
       range: updateRange,
       valueInputOption: 'RAW',
       resource: {
-        values: updatedRowData,
+        values: [updatedRowData],
       },
     });
 
