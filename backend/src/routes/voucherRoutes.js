@@ -22,7 +22,7 @@ router.post("/create", async (req, res) => {
   try {
     const { quantity, value } = req.body;
     const auth = new google.auth.GoogleAuth({
-      keyFile: 'C:/Users/Lucas/VOUCHER-MOBINC/backend/mobinc-voucher-key.json',
+      keyFile: 'mobinc-voucher-key.json',
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
   
@@ -96,7 +96,7 @@ router.post("/redeem", async (req, res) => {
     
     
     const auth = new google.auth.GoogleAuth({
-      keyFile: 'C:/Users/Lucas/VOUCHER-MOBINC/backend/mobinc-voucher-key.json',
+      keyFile: 'mobinc-voucher-key.json',
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
   
