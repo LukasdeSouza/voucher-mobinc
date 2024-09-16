@@ -1,3 +1,4 @@
 node_modules
 .env
 mobinc-voucher-key.json
+.vercel
