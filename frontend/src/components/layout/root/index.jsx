@@ -15,7 +15,7 @@ const RootLayout = () => {
     return <SplashPage/>
   } else {
     return (
-      <div className="w-screen h-full">
+      <div className="w-screen h-full bg-[#0000]">
         <HeaderNavigation />
         <Outlet />
         <Toaster />
