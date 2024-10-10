@@ -6,6 +6,7 @@ import SuccessPage from "../pages/success";
 import LoginPage from "../pages/login";
 import GerenciarPage from "../pages/gerenciar";
 import NotFoundPage from "../pages/notFound";
+import HomePage from "../pages/home";
 
 export const router = createBrowserRouter([
   {
@@ -15,12 +16,12 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/resgatar",
         element: <VoucherPage />,
       },
-      // {
-      //   path: "/resgate",
-      //   element: <ResgateVoucherPage />,
-      // },
       {
         path: "/login",
         element: <LoginPage/>,

@@ -16,7 +16,7 @@ const RootLayout = () => {
   } else {
     return (
       <div className="w-screen h-full bg-[#0000]">
-        <HeaderNavigation />
+        {/* <HeaderNavigation /> */}
         <Outlet />
         <Toaster />
       </div>
