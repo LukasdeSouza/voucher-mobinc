@@ -91,7 +91,7 @@ const VoucherPage = () => {
                 número do voucher
               </label>
               <input
-                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 {...register("number", { required: true })}
               />
               {errors.number && (
@@ -105,7 +105,7 @@ const VoucherPage = () => {
                 senha do voucher
               </label>
               <input
-                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 {...register("password", { required: true })}
               />
               {errors.password && (
@@ -119,7 +119,7 @@ const VoucherPage = () => {
                 seu nome completo
               </label>
               <input
-                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 {...register("nome", { required: true })}
               />
               {errors.nome && (
@@ -133,7 +133,7 @@ const VoucherPage = () => {
                 instituição bancária
               </label>
               <input
-                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 placeholder="ex: Itaú, Bradesco, Nubank"
                 {...register("banco", { required: true })}
               />
@@ -148,7 +148,7 @@ const VoucherPage = () => {
                 tipo de chave pix
               </label>
               <input
-                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 placeholder="ex: CPF, CNPJ, e-mail, telefone"
                 {...register("tipoChavePix", { required: true })}
               />
@@ -163,7 +163,7 @@ const VoucherPage = () => {
                 chave Pix
               </label>
               <input
-                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 {...register("chavePix", { required: true })}
               />
               {errors.chavePix && (
