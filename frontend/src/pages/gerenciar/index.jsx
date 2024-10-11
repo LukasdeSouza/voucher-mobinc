@@ -9,13 +9,12 @@ import { getToken } from "../../utils/localStorage";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/format";
 import MobIncLogo from "../../assets/mob_inc_logo";
+import mobCashLogin from "../../assets/mobcash_login.png";
 
 const GerenciarPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState();
   const [inputValue, setInputValue] = useState("");
-  // const [quantityValue, setQuantityValue] = useState("");
-  // const [seePassword, setSeePassword] = useState(false);
 
   const {
     register,
@@ -28,17 +27,6 @@ const GerenciarPage = () => {
       quantity: 1,
     }
   });
-
-  // const generateVoucher = (length = 12) => {
-  //   const charset =
-  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  //   let voucher = "";
-  //   for (let i = 0; i < length; i++) {
-  //     const randomIndex = Math.floor(Math.random() * charset.length);
-  //     voucher += charset[randomIndex];
-  //   }
-  //   setValue("number", voucher);
-  // };
 
   const onChangeInputValue = (e) => {
     let inputValue = formatCurrency(e.target.value);
@@ -96,48 +84,42 @@ const GerenciarPage = () => {
   }, []);
 
   return (
-    <div className="flex w-full h-3/4 justify-center items-center bg-white">
+    <div className="flex w-full justify-center items-center">
+      <img src={mobCashLogin} alt="" />
+      <div className="absolute top-8 left-8">
+        <p
+          className="text-black font-light text-2xl"
+          style={{ fontFamily: "Playfair Display" }}
+        >
+          MOB
+        </p>
+        <p
+          className="text-black font-light text-2xl -mt-3"
+          style={{ fontFamily: "Playfair Display" }}
+        >
+          CASH
+        </p>
+      </div>
       <Card>
         <div className="flex flex-col gap-8">
-          <p className="text-black font-bold">cadastrar um novo voucher.</p>
+          <p className="text-lime-400 font-bold">cadastrar um novo voucher.</p>
           <form
             className="flex flex-col gap-4"
             onSubmit={handleSubmit(onSubmit)}
           >
-            {/* <div className="relative flex flex-col gap-1">
-              <label className="font-thin text-xs text-gray-900" htmlFor="">
-                código do voucher
-              </label>
-              <RxUpdate
-                size={20}
-                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
-                onClick={() => generateVoucher(12)}
-              />
-              <input
-                disabled
-                className="bg-white text-gray-600 p-2 border border-[#222222]"
-                {...register("number", { required: true })}
-              />
-              {errors.number && (
-                <span className="text-xs text-red-700">
-                  gere um código de voucher para salvar
-                </span>
-              )}
-            </div> */}
             <div className="relative flex flex-col gap-1">
-              <label className="font-thin text-xs text-gray-900" htmlFor="">
+              <label className="font-thin text-xs text-lime-400" htmlFor="">
                 valor do voucher
               </label>
               <TbReportMoney
                 size={20}
-                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
+                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
               />
               <input
-                className="bg-white text-gray-600 p-2 border border-[#222222]"
+                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
                 placeholder="R$ 0,00"
                 value={inputValue}
                 onChange={onChangeInputValue}
-                // {...register("value", { required: true })}
               />
               {errors.value && (
                 <span className="text-xs text-red-700">
@@ -146,15 +128,16 @@ const GerenciarPage = () => {
               )}
             </div>
             <div className="relative flex flex-col gap-1">
-              <label className="font-thin text-xs text-gray-900" htmlFor="">
+              <label className="font-thin text-xs text-lime-400" htmlFor="">
                 quantidade de vouchers
               </label>
               <TbNumbers
                 size={20}
-                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
+                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
               />
               <input
-                className="bg-white text-gray-600 p-2 border border-[#222222]"
+                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                
                 placeholder="ex: 2"
                 {...register("quantity", { required: true })}
               />
@@ -164,34 +147,6 @@ const GerenciarPage = () => {
                 </span>
               )}
             </div>
-            {/* <div className="relative flex flex-col gap-1">
-              <label className="font-thin text-xs text-gray-900" htmlFor="">
-                senha do voucher
-              </label>
-              <input
-                type={seePassword ? "text" : "password"}
-                className="bg-white text-gray-600 p-2 border border-[#222222] hover:bg-slate-100 hover:scale-95 delay-75 transition-all"
-                {...register("password", { required: true, minLength: 8 })}
-              />
-              {seePassword ? (
-                <FaRegEyeSlash
-                  size={20}
-                  className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
-                  onClick={() => setSeePassword((seePassword) => !seePassword)}
-                />
-              ) : (
-                <FaRegEye
-                  size={20}
-                  className="hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-gray-700 transition-all ease-in-out delay-100"
-                  onClick={() => setSeePassword((seePassword) => !seePassword)}
-                />
-              )}
-              {errors.password && (
-                <span className="text-xs text-red-700">
-                  a senha deve conter no mínimo 8 caractéres.
-                </span>
-              )}
-            </div> */}
             <input
               type={"submit"}
               disabled={loading}
