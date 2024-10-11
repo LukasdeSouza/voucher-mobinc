@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Card from "../../components/card";
-import Input from "../../components/input";
 import ButtonContained from "../../components/buttons/contained";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import mobCashResgateBackground from "../../assets/bg_resgate.png";
 import toast from "react-hot-toast";
 
 const VoucherPage = () => {
@@ -17,7 +17,7 @@ const VoucherPage = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await fetch(
         "https://voucher-mobinc.onrender.com/api/vouchers/redeem",
@@ -30,7 +30,7 @@ const VoucherPage = () => {
             nome: data.nome,
             banco: data.banco,
             chavePix: data.chavePix,
-            tipoChavePix: data.tipoChavePix
+            tipoChavePix: data.tipoChavePix,
           }),
         }
       );
@@ -54,16 +54,31 @@ const VoucherPage = () => {
         },
       });
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   return (
-    <div className="flex w-full h-3/4 mt-2 justify-center items-center">
+    <div className="flex justify-center items-center">
+      <img src={mobCashResgateBackground} alt="" />
+      <div className="absolute top-8 left-8">
+        <p
+          className="text-black font-light text-2xl"
+          style={{ fontFamily: "Playfair Display" }}
+        >
+          MOB
+        </p>
+        <p
+          className="text-black font-light text-2xl -mt-3"
+          style={{ fontFamily: "Playfair Display" }}
+        >
+          CASH
+        </p>
+      </div>
       <Card>
         <div className="flex flex-col gap-8">
-          <div>
-            <p className="text-white font-semibold">Resgate seu voucher.</p>
-            <small className="text-xs font-thin">
+          <div className="text-center">
+            <p className="font-semibold text-lime-400">Resgate seu voucher.</p>
+            <small className="font-semibold text-lime-400">
               informe o número do voucher seguido da senha
             </small>
           </div>
@@ -72,11 +87,11 @@ const VoucherPage = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="flex flex-col gap-1">
-              <label className="font-thin text-xs" htmlFor="">
+              <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 número do voucher
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
                 {...register("number", { required: true })}
               />
               {errors.number && (
@@ -86,11 +101,11 @@ const VoucherPage = () => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-thin text-xs" htmlFor="">
+              <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 senha do voucher
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
                 {...register("password", { required: true })}
               />
               {errors.password && (
@@ -100,11 +115,11 @@ const VoucherPage = () => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-thin text-xs" htmlFor="">
+              <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 seu nome completo
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
                 {...register("nome", { required: true })}
               />
               {errors.nome && (
@@ -114,11 +129,11 @@ const VoucherPage = () => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-thin text-xs" htmlFor="">
+              <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 instituição bancária
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
                 placeholder="ex: Itaú, Bradesco, Nubank"
                 {...register("banco", { required: true })}
               />
@@ -129,11 +144,11 @@ const VoucherPage = () => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-thin text-xs" htmlFor="">
+              <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 tipo de chave pix
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
                 placeholder="ex: CPF, CNPJ, e-mail, telefone"
                 {...register("tipoChavePix", { required: true })}
               />
@@ -144,11 +159,11 @@ const VoucherPage = () => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label className="font-thin text-xs" htmlFor="">
+              <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 chave Pix
               </label>
               <input
-                className="p-2 border border-[#222222] hover:bg-gray-900 hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#111] hover:scale-95 delay-75 transition-all"
                 {...register("chavePix", { required: true })}
               />
               {errors.chavePix && (
@@ -165,6 +180,9 @@ const VoucherPage = () => {
           </form>
         </div>
       </Card>
+      <p className="absolute bottom-8 right-8 text-white font-light text-xs">
+        UMA EMPRESA DO GRUPO MOB INC.
+      </p>
     </div>
   );
 };
