@@ -15,9 +15,9 @@ app.use(express.json());
 app.use("/vouchers", voucherRoutes);
 app.use("/auth", authRoutes);
 
-app.use("/", (req, res) => {
-  res.send("API MOBCASH IS RUNNING");
-})
+// app.use("/", (req, res) => {
+//   res.send("API MOBCASH IS RUNNING");
+// })
 
 
 // const PORT = process.env.PORT || 5000;
