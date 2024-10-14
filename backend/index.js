@@ -8,17 +8,14 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 
-// Conectar ao banco de dados
 connectDB();
 
-// Middleware para analisar JSON
 app.use(express.json());
 
 app.use("/", (req, res) => {
   res.send("API is running...");
 })
 
-// Rotas
 app.use("/api/vouchers", voucherRoutes);
 app.use("/api/auth", authRoutes);
 
