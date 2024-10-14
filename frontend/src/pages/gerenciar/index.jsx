@@ -38,7 +38,7 @@ const GerenciarPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://voucher-mobinc.onrender.com/api/vouchers/create`,
+        `${import.meta.env.VITE_BACKEND_API}api/vouchers/create`,
         {
           headers: {
             "Content-Type": "application/json",

@@ -20,7 +20,7 @@ const VoucherPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://voucher-mobinc.onrender.com/api/vouchers/redeem",
+        `${import.meta.env.VITE_BACKEND_API}api/vouchers/redeem`,
         {
           headers: { "Content-Type": "application/json" },
           method: "POST",

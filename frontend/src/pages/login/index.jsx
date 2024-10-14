@@ -23,7 +23,7 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await fetch("https://voucher-mobinc.onrender.com/api/auth/login", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}api/auth/login`, {
         headers: {
           "Content-Type": "application/json",
         },
