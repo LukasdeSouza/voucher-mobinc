@@ -12,13 +12,15 @@ const sheets = google.sheets("v4");
 require("dotenv").config();
 
 const app = express();
-app.use(cors({
+app.use(
+  cors({
     origin: process.env.ALLOWED_ORIGINS || "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  }));
-
+    credentials: true,
+  })
+);
+app.options("*", cors());
 connectDB();
 app.use(express.json());
 
