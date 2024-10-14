@@ -21,7 +21,7 @@ app.use("/", (req, res) => {
 
 
 // const PORT = process.env.PORT || 5000;
-app.listen(() => console.log(`Server running on port ${process.env.PORT}`));
+// app.listen(() => console.log(`Server running on port ${process.env.PORT}`));
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 module.exports = app
