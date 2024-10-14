@@ -25,14 +25,14 @@ const GerenciarPage = () => {
   } = useForm({
     defaultValues: {
       quantity: 1,
-    }
+    },
   });
 
   const onChangeInputValue = (e) => {
     let inputValue = formatCurrency(e.target.value);
     setInputValue(inputValue);
     setValue("value", inputValue);
-  }
+  };
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -46,14 +46,14 @@ const GerenciarPage = () => {
           method: "POST",
           body: JSON.stringify({
             quantity: data.quantity,
-            value: data.value
+            value: data.value,
           }),
         }
       );
       const result = await response.json();
       if (result.vouchers) {
         toast(result.message, {
-          icon: <MobIncLogo/>,
+          icon: <MobIncLogo />,
           style: {
             display: "flex",
             flexDirection: "column",
@@ -77,15 +77,12 @@ const GerenciarPage = () => {
     const token = getToken();
     if (!token) {
       navigate("/login");
-    } 
-    // else {
-    //   generateVoucher();
-    // }
+    }
   }, []);
 
   return (
     <div className="flex w-full justify-center items-center">
-      <img src={mobCashLogin} alt="" />
+      <img className="h-screen" src={mobCashLogin} alt="" />
       <div className="absolute top-8 left-8">
         <p
           className="text-black font-light text-2xl"
@@ -116,10 +113,11 @@ const GerenciarPage = () => {
                 className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
               />
               <input
-                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
                 placeholder="R$ 0,00"
-                value={inputValue}
-                onChange={onChangeInputValue}
+                {...register("value", { required: true })}
+                // value={inputValue}
+                // onChange={onChangeInputValue}
               />
               {errors.value && (
                 <span className="text-xs text-red-700">
@@ -136,8 +134,7 @@ const GerenciarPage = () => {
                 className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
               />
               <input
-                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
-                
+                className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
                 placeholder="ex: 2"
                 {...register("quantity", { required: true })}
               />

@@ -56,7 +56,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex w-full justify-center items-center">
-      <img src={mobCashLogin} alt="" />
+      <img className="h-screen" src={mobCashLogin} alt="" />
       <div className="absolute top-8 left-8">
         <p
           className="text-black font-light text-2xl"

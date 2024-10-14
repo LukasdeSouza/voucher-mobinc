@@ -11,22 +11,23 @@ const HomePage = () => {
       <img className="h-screen" src={mobCashBackground} alt="" />
       <h1
         onClick={() => navigate("/resgatar")}
-        className="absolute top-[30%] left-[28%] text-[141px] font-serif 
+        className="absolute top-[35%] lg:top-[30%] xl:top-[30%] xl:left-[28%] lg:left-[28%] font-serif 
         font-light text-lime-300 hover:text-green-800 hover:scale-105 
-        delay-100 transition-all ease-in-out drop-shadow-xl cursor-pointer"
+        delay-100 transition-all ease-in-out drop-shadow-xl cursor-pointer text-6xl 
+        lg:text-[141px] xl:text-[141px] text-"
         style={{ fontFamily: "Playfair Display" }}
       >
         MOBCASH
       </h1>
       <p
-        className="absolute right-[28%] mt-24 font-light text-white"
+        className="absolute right-[28%] bottom-2/4 lg:mt-24 xl:mt-24 font-light text-white"
         style={{ fontFamily: "Playfair Display" }}
       >
         Seguro e rápido.
       </p>
       <div className="absolute bottom-14 right-56 flex flex-row items-center gap-2">
-        <IoGlobeSharp size={48} />
-        <p className="text-white text-xs max-w-48 capitalize">
+        <IoGlobeSharp className="sm:hidden" size={48} />
+        <p className="text-white text-[10px] lg:text-xs xl:text-xs max-w-48 capitalize">
           CONECTE-SE, PARTICIPE. NO FINAL, TEM UM AGRADECIMENTO ESPECIAL, FEITO
           COM CARINHO, PARA VOCÊ APROVEITAR DO SEU JEITO.
         </p>

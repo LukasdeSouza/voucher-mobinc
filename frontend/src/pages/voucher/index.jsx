@@ -59,23 +59,23 @@ const VoucherPage = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <img src={mobCashResgateBackground} alt="" />
-      <div className="absolute top-8 left-8">
+      <img className="min-h-screen" src={mobCashResgateBackground} alt="" />
+      <div className="absolute top-4 lg:top-8 xl:top-8 left-8 z-10">
         <p
-          className="text-black font-light text-2xl"
+          className="text-black font-light text-lg xl:text-2xl lg:text-2xl"
           style={{ fontFamily: "Playfair Display" }}
         >
           MOB
         </p>
         <p
-          className="text-black font-light text-2xl -mt-3"
+          className="text-black font-light text-lg xl:text-2xl lg:text-2xl -mt-3"
           style={{ fontFamily: "Playfair Display" }}
         >
           CASH
         </p>
       </div>
       <Card>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
           <div className="text-center">
             <p className="font-semibold text-lime-400">Resgate seu voucher.</p>
             <small className="font-semibold text-lime-400">
@@ -83,7 +83,7 @@ const VoucherPage = () => {
             </small>
           </div>
           <form
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-3"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="flex flex-col gap-1">
@@ -92,6 +92,7 @@ const VoucherPage = () => {
               </label>
               <input
                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                placeholder="ex: 123456789"
                 {...register("number", { required: true })}
               />
               {errors.number && (
@@ -106,6 +107,7 @@ const VoucherPage = () => {
               </label>
               <input
                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                placeholder="ex: aEx45$@"
                 {...register("password", { required: true })}
               />
               {errors.password && (
@@ -119,7 +121,8 @@ const VoucherPage = () => {
                 seu nome completo
               </label>
               <input
-                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                placeholder="ex: Seu Nome Completo"
                 {...register("nome", { required: true })}
               />
               {errors.nome && (
@@ -147,11 +150,30 @@ const VoucherPage = () => {
               <label className="text-lime-400 font-thin text-xs" htmlFor="">
                 tipo de chave pix
               </label>
-              <input
+              <select
                 className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
                 placeholder="ex: CPF, CNPJ, e-mail, telefone"
                 {...register("tipoChavePix", { required: true })}
-              />
+              >
+                <option className="bg-[#111] text-white" value="CPF">
+                  CPF
+                </option>
+                <option className="bg-[#111] text-white" value="CNPJ">
+                  CNPJ
+                </option>
+                <option className="bg-[#111] text-white" value="e-mail">
+                  E-mail
+                </option>
+                <option className="bg-[#111] text-white" value="telefone">
+                  Telefone
+                </option>
+                <option
+                  className="bg-[#111] text-white"
+                  value="chave_aleatoria"
+                >
+                  Chave aleatória
+                </option>
+              </select>
               {errors.tipoChavePix && (
                 <span className="text-xs text-red-700">
                   o tipo de chave pix é obrigatório.
@@ -180,7 +202,7 @@ const VoucherPage = () => {
           </form>
         </div>
       </Card>
-      <p className="absolute bottom-8 right-8 text-white font-light text-xs">
+      <p className="absolute bottom-0 xl:bottom-1 right-8 text-white font-light text-xs">
         UMA EMPRESA DO GRUPO MOB INC.
       </p>
     </div>

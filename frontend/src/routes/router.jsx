@@ -30,10 +30,10 @@ export const router = createBrowserRouter([
         path: "/gerenciar",
         element: <GerenciarPage/>,
       },
-      {
-        path: "/sucesso",
-        element: <SuccessPage/>,
-      },
+      // {
+      //   path: "/sucesso",
+      //   element: <SuccessPage/>,
+      // },
     ],
   },
 ]);
