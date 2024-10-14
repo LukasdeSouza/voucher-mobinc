@@ -23,7 +23,7 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/login`, {
         headers: {
           "Content-Type": "application/json",
         },
