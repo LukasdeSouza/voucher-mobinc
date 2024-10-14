@@ -14,6 +14,10 @@ connectDB();
 // Middleware para analisar JSON
 app.use(express.json());
 
+app.use("/", (req, res) => {
+  res.send("API is running...");
+})
+
 // Rotas
 app.use("/api/vouchers", voucherRoutes);
 app.use("/api/auth", authRoutes);
