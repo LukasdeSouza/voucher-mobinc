@@ -16,7 +16,7 @@ app.use("/api/vouchers", voucherRoutes);
 app.use("/api/auth", authRoutes);
 
 app.use("/", (req, res) => {
-  res.send("API is running...");
+  res.send("API MOBCASH IS RUNNING");
 })
 
 
