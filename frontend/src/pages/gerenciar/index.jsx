@@ -38,7 +38,7 @@ const GerenciarPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_API}api/vouchers/create`,
+        `${import.meta.env.VITE_BACKEND_API}vouchers/create`,
         {
           headers: {
             "Content-Type": "application/json",
