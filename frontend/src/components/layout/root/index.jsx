@@ -18,7 +18,7 @@ const RootLayout = () => {
   } else {
     return (
       <div className="w-screen h-full bg-[#0000]">
-        <div className="absolute right-4 top-4 flex flex-row items-center gap-1">
+        <div className="absolute right-4 top-4 flex flex-row items-center gap-4">
           <Link
             className="text-white text-sm z-20 hover:underline"
             to="/resgatar"
