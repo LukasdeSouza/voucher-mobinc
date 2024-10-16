@@ -72,7 +72,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/create", async (req, res) => {
+app.post("/vouchers/create", async (req, res) => {
   const generateVoucherInfo = (length = 12) => {
     const charset =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -139,7 +139,7 @@ app.post("/create", async (req, res) => {
 });
 
 // Rota para resgatar um voucher
-app.post("/redeem", async (req, res) => {
+app.post("/vouchers/redeem", async (req, res) => {
   try {
     const { number, password, nome, banco, chavePix, tipoChavePix } = req.body;
 
