@@ -246,9 +246,9 @@ app.get("/getAll", async (req, res) => {
   }
 });
 
-app.use("/", (req, res) => {
-  res.send("API MOBCASH IS RUNNING");
-})
+// app.use("/", (req, res) => {
+//   res.send("API MOBCASH IS RUNNING");
+// })
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
