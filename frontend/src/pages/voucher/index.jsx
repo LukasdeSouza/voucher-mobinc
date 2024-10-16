@@ -41,7 +41,9 @@ const VoucherPage = () => {
       ) {
         toast.error(result.message);
       } else {
-        toast.success(result.message);
+        toast.success(result.message, {
+          duration: 10000,
+        });
         navigate("/");
       }
     } catch (error) {
