@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../components/card";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../../utils/localStorage";
 import ButtonContained from "../../components/buttons/contained";
-import mobCashLogin from "../../assets/mobcash_login.png"
+import mobCashLogin from "../../assets/mobcash_login.png";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const LoginPage = () => {
@@ -23,16 +23,19 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API}/login`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_API}/login`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        }
+      );
       const result = await response.json();
       if (result.token) {
         setToken(result.token);
@@ -53,6 +56,13 @@ const LoginPage = () => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("@mobinc-token");
+    if (token) {
+      navigate("/gerenciar");
+    }
+  }, []);
 
   return (
     <div className="flex w-full justify-center items-center">
@@ -83,7 +93,7 @@ const LoginPage = () => {
                 e-mail de administrador
               </label>
               <input
-                 className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 {...register("email", {
                   required: true,
                   pattern: {
@@ -103,7 +113,7 @@ const LoginPage = () => {
               </label>
               <input
                 type={seePassword ? "text" : "password"}
-                 className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
+                className="p-2 border border-[#222222] bg-[#1111] hover:scale-95 delay-75 transition-all"
                 {...register("password", { required: true })}
               />
               {seePassword ? (
