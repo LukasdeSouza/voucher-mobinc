@@ -18,16 +18,16 @@ const RootLayout = () => {
   } else {
     return (
       <div className="w-screen h-full bg-[#0000]">
-        <div className="flex flex-row items-center gap-1">
+        <div className="absolute right-4 top-4 flex flex-row items-center gap-1">
           <Link
-            className="absolute right-4 top-4 text-white text-sm z-20 hover:underline"
+            className="text-white text-sm z-20 hover:underline"
             to="/resgatar"
           >
             Resgatar Voucher
           </Link>
           {token && (
             <Link
-              className="absolute right-4 top-12 text-white text-sm z-20 hover:underline"
+              className="text-white text-sm z-20 hover:underline"
               onClick={() => {
                 localStorage.removeItem("@mobinc-token");
                 navigate("/login");
