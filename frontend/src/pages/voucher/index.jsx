@@ -60,7 +60,7 @@ const VoucherPage = () => {
   return (
     <div className="flex justify-center items-center">
       <img className="min-h-screen" src={mobCashResgateBackground} alt="" />
-      <div className="absolute top-4 lg:top-8 xl:top-8 left-8 z-20">
+      <div className="absolute top-2 lg:top-8 xl:top-8 left-8 z-20">
         <p
           className="text-black font-light text-lg xl:text-2xl lg:text-2xl"
           style={{ fontFamily: "Playfair Display" }}
