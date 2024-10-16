@@ -20,13 +20,13 @@ const HomePage = () => {
         MOBCASH
       </h1>
       <p
-        className="absolute right-[28%] bottom-2/4 lg:mt-24 xl:mt-24 font-light text-white"
+        className="absolute right-[15%] bottom-2/4 lg:mt-24 xl:mt-24 font-light text-white"
         style={{ fontFamily: "Playfair Display" }}
       >
         Seguro e rápido.
       </p>
-      <div className="absolute bottom-14 right-56 flex flex-row items-center gap-2">
-        <IoGlobeSharp className="sm:hidden" size={48} />
+      <div className="absolute ml-6 bottom-14 right-56 flex flex-row items-center gap-2">
+        <IoGlobeSharp className=" lg:flex xl:flex w-16 h-16" />
         <p className="text-white text-[10px] lg:text-xs xl:text-xs max-w-48 capitalize">
           CONECTE-SE, PARTICIPE. NO FINAL, TEM UM AGRADECIMENTO ESPECIAL, FEITO
           COM CARINHO, PARA VOCÊ APROVEITAR DO SEU JEITO.
