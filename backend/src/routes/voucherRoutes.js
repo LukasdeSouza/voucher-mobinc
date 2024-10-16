@@ -6,7 +6,6 @@ const sheets = google.sheets('v4');
 const router = express.Router();
 const path = require('path');
 
-// Rota para criar um voucher
 router.post("/create", async (req, res) => {
   const generateVoucherInfo = (length = 12) => {
     const charset =
@@ -70,7 +69,6 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// Rota para resgatar um voucher
 router.post("/redeem", async (req, res) => {
   try {
     const { number, password, nome, banco, chavePix, tipoChavePix } = req.body;

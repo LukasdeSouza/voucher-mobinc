@@ -5,7 +5,6 @@ const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET; // Defina isso no seu .env
 
-// Rota de registro
 router.post('/signup', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -24,7 +23,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Rota de login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
