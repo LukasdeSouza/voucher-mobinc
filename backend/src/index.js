@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./src/db");
-const Voucher = require("./src/models/Voucher");
-const User = require("./src/models/User");
+const connectDB = require("./db");
+const Voucher = require("./models/Voucher");
+const User = require("./models/User");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const { google } = require("googleapis");
