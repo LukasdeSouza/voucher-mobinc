@@ -92,7 +92,7 @@ app.post("/vouchers/create", async (req, res) => {
     });
 
     const client = await auth.getClient();
-    const spreadsheetId = "15eVcVy-EWTh1viHcvj2PobVMzMALpH2FFARG5S64zd8";
+    const spreadsheetId = "1FcoZLDNAVRdQCPSrsFgRfo-96z8KeGqHQ4mIpR4DKkM";
     const range = "Sheet1!A1";
 
     let createdVouchers = [];
@@ -134,7 +134,7 @@ app.post("/vouchers/create", async (req, res) => {
       vouchers: createdVouchers,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, log: error });
   }
 });
 
@@ -169,7 +169,7 @@ app.post("/vouchers/redeem", async (req, res) => {
     });
 
     const client = await auth.getClient();
-    const spreadsheetId = "15eVcVy-EWTh1viHcvj2PobVMzMALpH2FFARG5S64zd8";
+    const spreadsheetId = "1FcoZLDNAVRdQCPSrsFgRfo-96z8KeGqHQ4mIpR4DKkM";
     const readRange = "Sheet1!A1:J";
 
     const readResponse = await sheets.spreadsheets.values.get({
@@ -228,7 +228,7 @@ app.post("/vouchers/redeem", async (req, res) => {
         "Suas informações foram salvas com Sucesso! Em breve o valor do Voucher cairá em sua conta informada",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, log: error });
   }
 });
 
@@ -245,6 +245,60 @@ app.get("/getAll", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+const SPREADSHEET_ID = 'your_spreadsheet_id';
+
+// Função de autenticação
+async function authenticate() {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: "mobinc-voucher-key.json",
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    const client = await auth.getClient();
+    const sheets = google.sheets({ version: 'v4', auth: client });
+    return sheets;
+}
+
+app.get('/read-sheet', async (req, res) => {
+    try {
+        const sheets = await authenticate();
+        const range = 'Sheet1!A1:A1';
+        const response = await sheets.spreadsheets.values.get({
+            spreadsheetId: "1FcoZLDNAVRdQCPSrsFgRfo-96z8KeGqHQ4mIpR4DKkM",
+            range: range,
+        });
+        console.log('response', response)
+        const rows = response.data.values;
+        if (rows && rows.length) {
+            res.json({ data: rows });
+        } else {
+            res.json({ message: 'Nenhum dado encontrado.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao ler dados da planilha', details: error });
+    }
+});
+
+app.post('/write-sheet', async (req, res) => {
+    try {
+        const sheets = await authenticate();
+        const range = 'Sheet1!A1:D1';
+        const values = [['Testando', 'Escrita', 'API', 'Sucesso!']];
+        const resource = { values };
+        const result = await sheets.spreadsheets.values.update({
+            spreadsheetId: "15eVcVy-EWTh1viHcvj2PobVMzMALpH2FFARG5S64zd8",
+            range: range,
+            valueInputOption: 'RAW',
+            resource: resource,
+        });
+        res.json({ message: `${result.data.updatedCells} células foram atualizadas.` });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao escrever dados na planilha', details: error });
+    }
+});
+
+
+
 
 // app.use("/", (req, res) => {
 //   res.send("API MOBCASH IS RUNNING");
