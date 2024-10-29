@@ -225,7 +225,7 @@ app.post("/vouchers/redeem", async (req, res) => {
 
     res.status(200).json({
       message:
-        "Suas informações foram salvas com Sucesso! Em breve o valor do Voucher cairá em sua conta informada",
+        "Suas informações foram salvas com sucesso! Em breve, o valor do voucher será creditado na conta informada.",
     });
   } catch (error) {
     res.status(500).json({ error: error.message, log: error });
