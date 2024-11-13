@@ -26,7 +26,7 @@ const RootLayout = () => {
           >
             Resgatar Voucher
           </Link>
-          {token && (
+          {token ? (
             <Link
               className="text-white text-sm z-20 hover:underline"
               onClick={() => {
@@ -35,6 +35,13 @@ const RootLayout = () => {
               }}
             >
               Sair
+            </Link>
+          ) : (
+            <Link
+              className="text-white text-sm z-20 hover:underline"
+              to="/login"
+            >
+              Login
             </Link>
           )}
         </div>
