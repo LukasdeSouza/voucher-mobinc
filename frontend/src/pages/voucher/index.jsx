@@ -35,11 +35,9 @@ const VoucherPage = () => {
         }
       );
       const result = await response.json();
-      if (
-        result.message === "Voucher já resgatado" ||
-        result.message === "Voucher não encontrado"
-      ) {
-        toast.error(result.message);
+      if (!response.ok) {
+        // Captura todos os erros (status 4xx, 5xx) e exibe a mensagem do backend
+        toast.error(result.message || "Ocorreu um erro desconhecido.");
       } else {
         toast.success(result.message, {
           duration: 10000,

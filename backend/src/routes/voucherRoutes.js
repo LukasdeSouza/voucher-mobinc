@@ -19,7 +19,12 @@ router.post("/create", async (req, res) => {
   };
 
   try {
-    const { quantity, value } = req.body;
+    const { quantity, value, projectName, expiresAt } = req.body;
+
+    if (!projectName || !expiresAt) {
+      return res.status(400).json({ message: "Nome do projeto e data de vencimento são obrigatórios." });
+    }
+
     const auth = new google.auth.GoogleAuth({
       keyFile: 'mobinc-voucher-key.json',
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
@@ -38,11 +43,13 @@ router.post("/create", async (req, res) => {
       const voucher = new Voucher({
         number: voucherNumber,
         password: voucherPassword,
-        value: value
+        value: value,
+        projectName,
+        expiresAt: new Date(expiresAt),
       });
 
       await voucher.save();
-      createdVouchers.push([voucherNumber, voucherPassword, value, "NÃO RESGATADO"]);
+      createdVouchers.push([voucherNumber, voucherPassword, value, projectName, new Date(expiresAt).toLocaleDateString('pt-BR'), "NÃO RESGATADO"]);
     }
 
     const response = await sheets.spreadsheets.values.append({
@@ -77,6 +84,10 @@ router.post("/redeem", async (req, res) => {
     if (!voucher)
       return res.status(404).json({ message: "Voucher não encontrado" });
     
+    if (new Date() > voucher.expiresAt) {
+      return res.status(400).json({ message: "Voucher expirado" });
+    }
+
     const isMatch = await voucher.matchPassword(password);
     if (!isMatch) return res.status(400).json({ message: "Senha inválida" });
     
@@ -99,7 +110,7 @@ router.post("/redeem", async (req, res) => {
     });
   
     const client = await auth.getClient();
-    const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
+    const spreadsheetId = "15eVcVy-EWTh1viHcvj2PobVMzMALpH2FFARG5S64zd8";
     const readRange = 'Sheet1!A1:J';
 
     const readResponse = await sheets.spreadsheets.values.get({
@@ -124,15 +135,15 @@ router.post("/redeem", async (req, res) => {
 
     // Concatena os novos valores às colunas existentes
     const updatedRowData = [
-      'RESGATADO',              // Status de resgate
+      'RESGATADO',              // Status de resgate (coluna F)
       nome,                     // Nova coluna
       banco,                    // Nova coluna
       chavePix,                 // Nova coluna
       tipoChavePix,             // Nova coluna
     ];
 
-    // Define o intervalo da linha a ser atualizada (exemplo: linha 5 -> 'Sheet1!A5:D5')
-    const updateRange = `Sheet1!D${voucherRowIndex + 1}:J${voucherRowIndex + 1}`;
+    // Define o intervalo da linha a ser atualizada, começando da coluna F
+    const updateRange = `Sheet1!F${voucherRowIndex + 1}:J${voucherRowIndex + 1}`;
     
     await sheets.spreadsheets.values.update({
       auth: client,

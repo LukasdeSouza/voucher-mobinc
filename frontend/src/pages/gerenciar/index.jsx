@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import Card from "../../components/card";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import {
+  FaRegEye,
+  FaRegEyeSlash,
+  FaProjectDiagram,
+  FaCalendarAlt,
+} from "react-icons/fa";
 import { TbNumbers, TbReportMoney } from "react-icons/tb";
 import { RxUpdate } from "react-icons/rx";
 import { getToken } from "../../utils/localStorage";
@@ -15,6 +20,7 @@ const GerenciarPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState();
   const [inputValue, setInputValue] = useState("");
+  const today = new Date().toISOString().split("T")[0];
 
   const {
     register,
@@ -47,6 +53,8 @@ const GerenciarPage = () => {
           body: JSON.stringify({
             quantity: data.quantity,
             value: data.value,
+            projectName: data.projectName,
+            expiresAt: data.expiresAt,
           }),
         }
       );
@@ -141,6 +149,45 @@ const GerenciarPage = () => {
               {errors.quantity && (
                 <span className="text-xs text-red-700">
                   digite uma quantidade de vouchers
+                </span>
+              )}
+            </div>
+            <div className="relative flex flex-col gap-1">
+              <label className="font-thin text-xs text-lime-400" htmlFor="">
+                nome do projeto
+              </label>
+              <FaProjectDiagram
+                size={20}
+                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
+              />
+              <input
+                className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                placeholder="ex: Projeto Verão"
+                {...register("projectName", { required: true })}
+              />
+              {errors.projectName && (
+                <span className="text-xs text-red-700">
+                  O nome do projeto é obrigatório.
+                </span>
+              )}
+            </div>
+            <div className="relative flex flex-col gap-1">
+              <label className="font-thin text-xs text-lime-400" htmlFor="">
+                data de vencimento
+              </label>
+              <FaCalendarAlt
+                size={20}
+                className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
+              />
+              <input
+                type="date"
+                min={today}
+                className="p-2 border border-[#222222] bg-[#1111] text-white hover:scale-95 delay-75 transition-all"
+                {...register("expiresAt", { required: true })}
+              />
+              {errors.expiresAt && (
+                <span className="text-xs text-red-700">
+                  A data de vencimento é obrigatória.
                 </span>
               )}
             </div>
