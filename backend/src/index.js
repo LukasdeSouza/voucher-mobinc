@@ -244,37 +244,67 @@ app.post("/vouchers/redeem", async (req, res) => {
     const client = await auth.getClient();
     const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
 
-    // Identifica o nome da aba usando o projeto salvo (ou cai no padrão 'Sheet1' por segurança)
-    let sheetName = voucher.projectName ? voucher.projectName.trim() : "Sheet1";
-
-    // Confirmação extra pra evitar erro caso o projeto não tenha gerado uma aba no Excel
+    // Obtém metadados de todas as abas para poder buscar em todas se necessário
     const sheetMetadata = await sheets.spreadsheets.get({ auth: client, spreadsheetId });
-    const sheetExists = sheetMetadata.data.sheets.some(s => s.properties.title === sheetName);
-    if (!sheetExists) {
-      sheetName = "Sheet1"; // fallback para a antiga aba caso as pessoas tenham apagado/mudado
+    const allSheets = sheetMetadata.data.sheets;
+
+    // Define a aba preferencial baseada no projeto do voucher (ou Sheet1)
+    let preferredSheetName = voucher.projectName ? voucher.projectName.trim() : "Sheet1";
+    
+    let sheetName = null;
+    let rows = [];
+    let voucherRowIndex = -1;
+
+    // Função auxiliar para ler dados de uma aba
+    const fetchSheetData = async (name) => {
+      try {
+        const res = await sheets.spreadsheets.values.get({
+          auth: client,
+          spreadsheetId,
+          range: `${name}!A1:J`,
+        });
+        return res.data.values || [];
+      } catch (error) {
+        console.error(`Erro ao ler aba ${name}:`, error.message);
+        return [];
+      }
+    };
+
+    // 1. Tenta buscar na aba preferencial primeiro
+    const preferredSheetExists = allSheets.some(s => s.properties.title === preferredSheetName);
+    if (preferredSheetExists) {
+      const data = await fetchSheetData(preferredSheetName);
+      const idx = data.findIndex((row) => row[0] === number);
+      if (idx !== -1) {
+        sheetName = preferredSheetName;
+        rows = data;
+        voucherRowIndex = idx;
+      }
     }
 
-    const readRange = `${sheetName}!A1:J`;
-
-    const readResponse = await sheets.spreadsheets.values.get({
-      auth: client,
-      spreadsheetId,
-      range: readRange,
-    });
-
-    const rows = readResponse.data.values;
-    if (!rows || rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Nenhum dado encontrado na planilha" });
-    }
-
-    // Encontra a linha correspondente ao voucher
-    const voucherRowIndex = rows.findIndex((row) => row[0] === number); // Assumindo que o número do voucher está na coluna A
+    // 2. Se não encontrou na preferencial, busca em TODAS as outras abas
     if (voucherRowIndex === -1) {
+      console.log(`Voucher ${number} não encontrado na aba preferencial (${preferredSheetName}). Buscando em todas as abas...`);
+      for (const sheet of allSheets) {
+        const currentSheetName = sheet.properties.title;
+        if (currentSheetName === preferredSheetName) continue; // Já verificado
+
+        const data = await fetchSheetData(currentSheetName);
+        const idx = data.findIndex((row) => row[0] === number);
+        if (idx !== -1) {
+          sheetName = currentSheetName;
+          rows = data;
+          voucherRowIndex = idx;
+          console.log(`Voucher encontrado na aba: ${sheetName}`);
+          break; // Encontrou
+        }
+      }
+    }
+
+    if (voucherRowIndex === -1 || !sheetName) {
       return res
         .status(404)
-        .json({ message: "Voucher não encontrado na planilha" });
+        .json({ message: "Voucher não encontrado em nenhuma aba da planilha" });
     }
 
     const currentRowData = rows[voucherRowIndex];
