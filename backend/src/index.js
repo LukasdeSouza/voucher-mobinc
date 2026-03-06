@@ -169,7 +169,7 @@ app.post("/vouchers/redeem", async (req, res) => {
 
     // Verificação base via Banco de Dados:
     if (voucher.expiresAt && new Date() > voucher.expiresAt) {
-      return res.status(400).json({ message: "Este voucher não é mais válido, passou da validade." });
+      return res.status(400).json({ message: "Voucher vencido. O prazo de resgate terminou" });
     }
 
     const isMatch = await voucher.matchPassword(password);
@@ -239,7 +239,7 @@ app.post("/vouchers/redeem", async (req, res) => {
 
         console.log(`Verificando Validade Sheets: Limite=${dataLimitePlanilha} | Agora=${new Date()}`);
         if (new Date() > dataLimitePlanilha) {
-          return res.status(400).json({ message: "Este voucher não é mais válido, passou da validade." });
+          return res.status(400).json({ message: "Voucher vencido. O prazo de resgate terminou" });
         }
       }
     }
