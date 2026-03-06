@@ -175,10 +175,10 @@ const GerenciarPage = () => {
               <label className="font-thin text-xs text-lime-400" htmlFor="">
                 data de vencimento
               </label>
-              <FaCalendarAlt
+              {/* <FaCalendarAlt
                 size={20}
                 className="hover:rotate-180 hover:text-lime-400 cursor-pointer absolute right-3 top-8 text-white transition-all ease-in-out delay-100"
-              />
+              /> */}
               <input
                 type="date"
                 min={today}

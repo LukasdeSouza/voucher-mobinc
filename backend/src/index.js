@@ -7,8 +7,8 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const { google } = require("googleapis");
 const sheets = google.sheets("v4");
-// const voucherRoutes = require("./src/routes/voucherRoutes");
-// const authRoutes = require("./src/routes/authRoutes");
+// const voucherRoutes = require("./routes/voucherRoutes");
+// const authRoutes = require("./routes/authRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -85,14 +85,22 @@ app.post("/vouchers/create", async (req, res) => {
   };
 
   try {
-    const { quantity, value } = req.body;
+    const { quantity, value, projectName, expiresAt } = req.body;
+
+    if (!projectName || !expiresAt) {
+      return res.status(400).json({ message: "Nome do projeto e data de vencimento são obrigatórios." });
+    }
+
     const auth = new google.auth.GoogleAuth({
-      keyFile: "mobinc-voucher-key.json",
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : '',
+      },
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
     const client = await auth.getClient();
-    const spreadsheetId = "1FcoZLDNAVRdQCPSrsFgRfo-96z8KeGqHQ4mIpR4DKkM";
+    const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
     const range = "Sheet1!A1";
 
     let createdVouchers = [];
@@ -101,18 +109,31 @@ app.post("/vouchers/create", async (req, res) => {
       const voucherNumber = generateVoucherInfo();
       const voucherPassword = generateVoucherInfo(8);
 
+      // Garante que o voucher seja válido até o último segundo do dia informado no fuso de Brasília (-03:00)
+      const expirationDate = new Date(`${expiresAt}T23:59:59-03:00`);
+
       const voucher = new Voucher({
         number: voucherNumber,
         password: voucherPassword,
         value: value,
+        projectName,
+        expiresAt: expirationDate,
       });
 
       await voucher.save();
+      // Inserindo na ordem: CÓDIGO (A), SENHA (B), VALOR (C), RESGATADO (D), CPF (E), BANCO (F), CHAVE PIX (G), TIPO PIX (H), VALIDADE (I), PROJETO (J)
+      // As colunas de resgate (E, F, G, H) ficam em branco quando o voucher é criado.
       createdVouchers.push([
-        voucherNumber,
-        voucherPassword,
-        value,
-        "NÃO RESGATADO",
+        voucherNumber,                                    // A
+        voucherPassword,                                  // B
+        value,                                            // C
+        "NÃO RESGATADO",                                  // D
+        "",                                               // E (CPF)
+        "",                                               // F (BANCO)
+        "",                                               // G (CHAVE PIX)
+        "",                                               // H (TIPO PIX)
+        expirationDate.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }), // I (VALIDADE)
+        projectName                                       // J (PROJETO)
       ]);
     }
 
@@ -138,14 +159,18 @@ app.post("/vouchers/create", async (req, res) => {
   }
 });
 
-// Rota para resgatar um voucher
 app.post("/vouchers/redeem", async (req, res) => {
   try {
-    const { number, password, nome, banco, chavePix, tipoChavePix } = req.body;
+    const { number, password, nome, cpf, banco, chavePix, tipoChavePix } = req.body;
 
     const voucher = await Voucher.findOne({ number });
     if (!voucher)
       return res.status(404).json({ message: "Voucher não encontrado" });
+
+    // Verificação base via Banco de Dados:
+    if (voucher.expiresAt && new Date() > voucher.expiresAt) {
+      return res.status(400).json({ message: "Este voucher não é mais válido, passou da validade." });
+    }
 
     const isMatch = await voucher.matchPassword(password);
     if (!isMatch) return res.status(400).json({ message: "Senha inválida" });
@@ -164,12 +189,15 @@ app.post("/vouchers/redeem", async (req, res) => {
         .json({ message: "Tipo de Chave Pix é obrigatório" });
 
     const auth = new google.auth.GoogleAuth({
-      keyFile: "mobinc-voucher-key.json",
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : '',
+      },
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
 
     const client = await auth.getClient();
-    const spreadsheetId = "1FcoZLDNAVRdQCPSrsFgRfo-96z8KeGqHQ4mIpR4DKkM";
+    const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
     const readRange = "Sheet1!A1:J";
 
     const readResponse = await sheets.spreadsheets.values.get({
@@ -194,21 +222,41 @@ app.post("/vouchers/redeem", async (req, res) => {
     }
 
     const currentRowData = rows[voucherRowIndex];
-    console.log(currentRowData);
+    console.log("=== Lendo dados do Voucher no Google Sheets ===");
+    console.log("Dados integrais da linha:", currentRowData);
 
-    // Concatena os novos valores às colunas existentes
+    // Validação extra: Conferir a Data Diretamente da Planilha (Coluna I = index 8)
+    const validadeNaPlanilha = currentRowData[8];
+    if (validadeNaPlanilha) {
+      // Formato esperado DD/MM/YYYY
+      const partes = validadeNaPlanilha.split("/");
+      if (partes.length === 3) {
+        // Converte DD/MM/YYYY para o instante final do dia em Brasília (XX:59:59)
+        const dia = partes[0].padStart(2, '0');
+        const mes = partes[1].padStart(2, '0');
+        const ano = partes[2];
+        const dataLimitePlanilha = new Date(`${ano}-${mes}-${dia}T23:59:59-03:00`);
+
+        console.log(`Verificando Validade Sheets: Limite=${dataLimitePlanilha} | Agora=${new Date()}`);
+        if (new Date() > dataLimitePlanilha) {
+          return res.status(400).json({ message: "Este voucher não é mais válido, passou da validade." });
+        }
+      }
+    }
+
+    // Concatena os novos valores de acordo com a ordem das colunas
+    // Colunas vão começar a atualizar a partir da Coluna D até a H
     const updatedRowData = [
-      "RESGATADO", // Status de resgate
-      nome, // Nova coluna
-      banco, // Nova coluna
-      chavePix, // Nova coluna
-      tipoChavePix, // Nova coluna
+      "RESGATADO",              // Coluna D: RESGATADO
+      cpf || nome || "-",       // Coluna E: CPF
+      banco,                    // Coluna F: BANCO
+      chavePix,                 // Coluna G: CHAVE PIX
+      tipoChavePix,             // Coluna H: TIPO DE CHAVE PIX
     ];
 
-    // Define o intervalo da linha a ser atualizada (exemplo: linha 5 -> 'Sheet1!A5:D5')
-    const updateRange = `Sheet1!D${voucherRowIndex + 1}:J${
-      voucherRowIndex + 1
-    }`;
+    // Atualiza das colunas D até H (na linha do voucher correspondente)
+    const updateRange = `Sheet1!D${voucherRowIndex + 1}:H${voucherRowIndex + 1
+      }`;
 
     await sheets.spreadsheets.values.update({
       auth: client,

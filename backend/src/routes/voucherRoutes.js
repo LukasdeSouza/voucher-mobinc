@@ -29,9 +29,9 @@ router.post("/create", async (req, res) => {
       keyFile: 'mobinc-voucher-key.json',
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
-  
+
     const client = await auth.getClient();
-    const spreadsheetId = "15eVcVy-EWTh1viHcvj2PobVMzMALpH2FFARG5S64zd8";
+    const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
     const range = "Sheet1!A1"
 
     let createdVouchers = [];
@@ -49,7 +49,8 @@ router.post("/create", async (req, res) => {
       });
 
       await voucher.save();
-      createdVouchers.push([voucherNumber, voucherPassword, value, projectName, new Date(expiresAt).toLocaleDateString('pt-BR'), "NÃO RESGATADO"]);
+      // Inserindo na ordem: CÓDIGO, SENHA, VALOR, RESGATADO
+      createdVouchers.push([voucherNumber, voucherPassword, value, "NÃO RESGATADO"]);
     }
 
     const response = await sheets.spreadsheets.values.append({
@@ -78,40 +79,40 @@ router.post("/create", async (req, res) => {
 
 router.post("/redeem", async (req, res) => {
   try {
-    const { number, password, nome, banco, chavePix, tipoChavePix } = req.body;
-    
+    const { number, password, nome, cpf, banco, chavePix, tipoChavePix } = req.body;
+
     const voucher = await Voucher.findOne({ number });
     if (!voucher)
       return res.status(404).json({ message: "Voucher não encontrado" });
-    
+
     if (new Date() > voucher.expiresAt) {
       return res.status(400).json({ message: "Voucher expirado" });
     }
 
     const isMatch = await voucher.matchPassword(password);
     if (!isMatch) return res.status(400).json({ message: "Senha inválida" });
-    
+
     if (voucher.isRedeemed)
       return res.status(400).json({ message: "Voucher já resgatado" });
 
-    if(!chavePix)
+    if (!chavePix)
       return res.status(400).json({ message: "Chave Pix é obrigatória" });
 
-    if(!banco)
+    if (!banco)
       return res.status(400).json({ message: "Banco é obrigatório" });
 
-    if(!tipoChavePix)
+    if (!tipoChavePix)
       return res.status(400).json({ message: "Tipo de Chave Pix é obrigatório" });
-    
-    
+
+
     const auth = new google.auth.GoogleAuth({
       keyFile: 'mobinc-voucher-key.json',
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
-  
+
     const client = await auth.getClient();
-    const spreadsheetId = "15eVcVy-EWTh1viHcvj2PobVMzMALpH2FFARG5S64zd8";
-    const readRange = 'Sheet1!A1:J';
+    const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
+    const readRange = 'Sheet1!A1:H';
 
     const readResponse = await sheets.spreadsheets.values.get({
       auth: client,
@@ -133,18 +134,19 @@ router.post("/redeem", async (req, res) => {
     const currentRowData = rows[voucherRowIndex];
     console.log(currentRowData)
 
-    // Concatena os novos valores às colunas existentes
+    // Concatena os novos valores de acordo com a ordem das colunas
+    // Colunas vão começar a atualizar a partir da Coluna D até a H
     const updatedRowData = [
-      'RESGATADO',              // Status de resgate (coluna F)
-      nome,                     // Nova coluna
-      banco,                    // Nova coluna
-      chavePix,                 // Nova coluna
-      tipoChavePix,             // Nova coluna
+      'RESGATADO',              // Coluna D: RESGATADO
+      cpf || nome || '-',       // Coluna E: CPF (pegando 'nome' caso o front envie com esse nome ainda)
+      banco,                    // Coluna F: BANCO
+      chavePix,                 // Coluna G: CHAVE PIX
+      tipoChavePix,             // Coluna H: TIPO DE CHAVE PIX
     ];
 
-    // Define o intervalo da linha a ser atualizada, começando da coluna F
-    const updateRange = `Sheet1!F${voucherRowIndex + 1}:J${voucherRowIndex + 1}`;
-    
+    // Atualiza das colunas D até H (na linha do voucher correspondente)
+    const updateRange = `Sheet1!D${voucherRowIndex + 1}:H${voucherRowIndex + 1}`;
+
     await sheets.spreadsheets.values.update({
       auth: client,
       spreadsheetId,
