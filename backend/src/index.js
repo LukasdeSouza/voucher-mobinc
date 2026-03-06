@@ -101,7 +101,52 @@ app.post("/vouchers/create", async (req, res) => {
 
     const client = await auth.getClient();
     const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
-    const range = "Sheet1!A1";
+
+    // Verifica se a aba com o nome do projeto já existe
+    const sheetMetadata = await sheets.spreadsheets.get({
+      auth: client,
+      spreadsheetId
+    });
+
+    const sheetName = projectName.trim();
+    const sheetExists = sheetMetadata.data.sheets.some(
+      (s) => s.properties.title === sheetName
+    );
+
+    if (!sheetExists) {
+      // Cria a nova aba (Sheet) com o nome do projeto
+      await sheets.spreadsheets.batchUpdate({
+        auth: client,
+        spreadsheetId,
+        resource: {
+          requests: [
+            {
+              addSheet: {
+                properties: {
+                  title: sheetName,
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      // Adiciona o cabeçalho nativo na nova aba
+      await sheets.spreadsheets.values.append({
+        auth: client,
+        spreadsheetId,
+        range: `${sheetName}!A1`,
+        valueInputOption: "RAW",
+        insertDataOption: "INSERT_ROWS",
+        resource: {
+          values: [
+            ["CÓDIGO VOUCHER", "SENHA VOUCHER", "VALOR", "RESGATADO", "CPF", "BANCO", "CHAVE PIX", "TIPO DE CHAVE PIX", "VALIDADE", "PROJETO"]
+          ],
+        },
+      });
+    }
+
+    const range = `${sheetName}!A1`;
 
     let createdVouchers = [];
 
@@ -198,7 +243,18 @@ app.post("/vouchers/redeem", async (req, res) => {
 
     const client = await auth.getClient();
     const spreadsheetId = "1XscG2P5Va1Xm5ssz2MoydFenVVW-FQScPJJHpLeaxLE";
-    const readRange = "Sheet1!A1:J";
+
+    // Identifica o nome da aba usando o projeto salvo (ou cai no padrão 'Sheet1' por segurança)
+    let sheetName = voucher.projectName ? voucher.projectName.trim() : "Sheet1";
+
+    // Confirmação extra pra evitar erro caso o projeto não tenha gerado uma aba no Excel
+    const sheetMetadata = await sheets.spreadsheets.get({ auth: client, spreadsheetId });
+    const sheetExists = sheetMetadata.data.sheets.some(s => s.properties.title === sheetName);
+    if (!sheetExists) {
+      sheetName = "Sheet1"; // fallback para a antiga aba caso as pessoas tenham apagado/mudado
+    }
+
+    const readRange = `${sheetName}!A1:J`;
 
     const readResponse = await sheets.spreadsheets.values.get({
       auth: client,
@@ -255,8 +311,7 @@ app.post("/vouchers/redeem", async (req, res) => {
     ];
 
     // Atualiza das colunas D até H (na linha do voucher correspondente)
-    const updateRange = `Sheet1!D${voucherRowIndex + 1}:H${voucherRowIndex + 1
-      }`;
+    const updateRange = `${sheetName}!D${voucherRowIndex + 1}:H${voucherRowIndex + 1}`;
 
     await sheets.spreadsheets.values.update({
       auth: client,
